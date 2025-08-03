@@ -7,6 +7,10 @@
 // Rotation angle
 static float angle = 0.0f;
 
+// Window dimensions
+static int windowWidth = 800;
+static int windowHeight = 600;
+
 void init() {
     // Set light properties
     GLfloat light_pos[] = { 4.0, 4.0, 4.0, 1.0 };
@@ -25,19 +29,57 @@ void init() {
     glEnable(GL_DEPTH_TEST);
 }
 
-// Function to draw text
-void drawText(const char *text, float x, float y) {
+// Function to draw text at 3D world coordinates, centered
+void drawText3D(const char *text, float x, float y, float z) {
     glDisable(GL_LIGHTING); // Disable lighting for text
+    glColor3f(1.0, 1.0, 1.0); // Set text color to white
+
+    GLdouble modelview[16];
+    GLdouble projection[16];
+    GLint viewport[4];
+
+    glGetDoublev(GL_MODELVIEW_MATRIX, modelview);
+    glGetDoublev(GL_PROJECTION_MATRIX, projection);
+    glGetIntegerv(GL_VIEWPORT, viewport);
+
+    GLdouble screenX, screenY, screenZ;
+    gluProject(x, y, z, modelview, projection, viewport, &screenX, &screenY, &screenZ);
+
+    // Calculate text width for centering
+    int textWidth = glutBitmapLength(GLUT_BITMAP_9_BY_15, (const unsigned char*)text);
+
     glMatrixMode(GL_PROJECTION);
     glPushMatrix();
     glLoadIdentity();
-    gluOrtho2D(0, 800, 0, 600);
+    gluOrtho2D(0, windowWidth, 0, windowHeight);
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+    glLoadIdentity();
+    glRasterPos2f(screenX - (textWidth / 2.0), screenY);
+    for (size_t i = 0; i < strlen(text); i++) {
+        glutBitmapCharacter(GLUT_BITMAP_9_BY_15, text[i]);
+    }
+    glPopMatrix();
+    glMatrixMode(GL_PROJECTION);
+    glPopMatrix();
+    glMatrixMode(GL_MODELVIEW);
+    glEnable(GL_LIGHTING); // Re-enable lighting
+}
+
+// Function to draw small text at 2D screen coordinates
+void drawSmallText2D(const char *text, float x, float y) {
+    glDisable(GL_LIGHTING); // Disable lighting for text
+    glColor3f(1.0, 1.0, 1.0); // Set text color to white
+    glMatrixMode(GL_PROJECTION);
+    glPushMatrix();
+    glLoadIdentity();
+    gluOrtho2D(0, windowWidth, 0, windowHeight);
     glMatrixMode(GL_MODELVIEW);
     glPushMatrix();
     glLoadIdentity();
     glRasterPos2f(x, y);
     for (size_t i = 0; i < strlen(text); i++) {
-        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, text[i]);
+        glutBitmapCharacter(GLUT_BITMAP_8_BY_13, text[i]);
     }
     glPopMatrix();
     glMatrixMode(GL_PROJECTION);
@@ -64,7 +106,7 @@ void display() {
     glMaterialfv(GL_FRONT, GL_SHININESS, mat_flat_shininess);
     glutSolidTeapot(1.0);
     glPopMatrix();
-    drawText("Flat Shading", 120, 50);
+    drawText3D("Flat Shading", -3.0, -1.5, 0.0); // Position text below teapot
 
     // --- 2. Gouraud Shading ---
     glPushMatrix();
@@ -79,7 +121,7 @@ void display() {
     glMaterialfv(GL_FRONT, GL_SHININESS, mat_gouraud_shininess);
     glutSolidTeapot(1.0);
     glPopMatrix();
-    drawText("Gouraud Shading", 320, 50);
+    drawText3D("Gouraud Shading", 0.0, -1.5, 0.0); // Position text below teapot
 
     // --- 3. Phong Shading (Simulated with high shininess) ---
     glPushMatrix();
@@ -94,7 +136,10 @@ void display() {
     glMaterialfv(GL_FRONT, GL_SHININESS, mat_phong_shininess);
     glutSolidTeapot(1.0);
     glPopMatrix();
-    drawText("Phong Shading", 550, 50);
+    drawText3D("Phong Shading", 3.0, -1.5, 0.0); // Position text below teapot
+
+    // Draw legend in the lower-left corner
+    drawSmallText2D("@mardonet", 10, 10);
 
     glutSwapBuffers();
 }
@@ -105,6 +150,10 @@ void reshape(int w, int h) {
     glLoadIdentity();
     gluPerspective(45.0, (GLfloat)w / (GLfloat)h, 1.0, 20.0);
     glMatrixMode(GL_MODELVIEW);
+
+    // Update global window dimensions
+    windowWidth = w;
+    windowHeight = h;
 }
 
 void idle() {
