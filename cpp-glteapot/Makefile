@@ -1,3 +1,6 @@
+# Author: mardonet
+# Date: 2025-08-03
+
 # Makefile for the cpp-glteapot project
 
 # Compiler and flags

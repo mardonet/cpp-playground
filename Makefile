@@ -1,3 +1,6 @@
+# Author: mardonet
+# Date: 2025-08-03
+
 # Master Makefile
 
 # Find all immediate subdirectories. These are assumed to be the projects.
@@ -11,8 +14,8 @@ PROJECTS := $(wildcard */)
 all:
 	@echo "--- Building all projects ---"
 	@for project in $(PROJECTS); do \
-		echo "==> Building $$project"; \
-		$(MAKE) -C $$project || exit 1; \
+		echo "==> Building $project"; \
+		$(MAKE) -C $project || exit 1; \
 	done
 	@echo "--- All projects built successfully ---"
 
@@ -20,8 +23,8 @@ all:
 clean:
 	@echo "--- Cleaning all projects ---"
 	@for project in $(PROJECTS); do \
-		echo "==> Cleaning $$project"; \
-		$(MAKE) -C $$project clean; \
+		echo "==> Cleaning $project"; \
+		$(MAKE) -C $project clean; \
 	done
 	@echo "--- All projects cleaned ---"
 

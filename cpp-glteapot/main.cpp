@@ -1,3 +1,6 @@
+// Author: mardonet
+// Date: 2025-08-03
+
 #include <GL/glut.h>
 #include <string.h>
 
