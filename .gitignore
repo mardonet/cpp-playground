@@ -3,4 +3,4 @@
 *.out
 
 # Ignore the executable
-cpp-glteapot
+cpp-glteapot/cpp-glteapot
