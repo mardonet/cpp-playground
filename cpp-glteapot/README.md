@@ -2,6 +2,10 @@
 
 This project renders three rotating teapots using different shading models: Flat, Gouraud, and Phong.
 
+## Demo
+
+https://youtu.be/uFcgsR97JEI
+
 ## Dependencies
 
 This project requires the OpenGL Utility Toolkit (GLUT) to be installed.
