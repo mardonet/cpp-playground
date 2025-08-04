@@ -1,5 +1,5 @@
 // Author: mardonet
-// Date: 2025-08-03
+// Date: 2025-08-04
 
 #include <GL/glut.h>
 #include <string.h>
@@ -8,8 +8,8 @@
 static float angle = 0.0f;
 
 // Window dimensions
-static int windowWidth = 800;
-static int windowHeight = 600;
+static int windowWidth = 720;
+static int windowHeight = 720;
 
 void init() {
     // Set light properties
@@ -167,7 +167,7 @@ void idle() {
 int main(int argc, char** argv) {
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
-    glutInitWindowSize(800, 600);
+    glutInitWindowSize(720, 720);
     glutInitWindowPosition(100, 100);
     glutCreateWindow("Shading Comparison: Flat, Gouraud, Phong");
     init();
